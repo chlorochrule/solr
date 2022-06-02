@@ -24,9 +24,9 @@ import org.apache.lucene.codecs.Codec;
 import org.apache.lucene.codecs.DocValuesFormat;
 import org.apache.lucene.codecs.KnnVectorsFormat;
 import org.apache.lucene.codecs.PostingsFormat;
-import org.apache.lucene.codecs.lucene91.Lucene91Codec;
-import org.apache.lucene.codecs.lucene91.Lucene91Codec.Mode;
-import org.apache.lucene.codecs.lucene91.Lucene91HnswVectorsFormat;
+import org.apache.lucene.codecs.lucene92.Lucene92Codec;
+import org.apache.lucene.codecs.lucene92.Lucene92Codec.Mode;
+import org.apache.lucene.codecs.lucene92.Lucene92HnswVectorsFormat;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrException.ErrorCode;
 import org.apache.solr.common.util.NamedList;
@@ -93,7 +93,7 @@ public class SchemaCodecFactory extends CodecFactory implements SolrCoreAware {
       log.debug("Using default compressionMode: {}", compressionMode);
     }
     codec =
-        new Lucene91Codec(compressionMode) {
+        new Lucene92Codec(compressionMode) {
           @Override
           public PostingsFormat getPostingsFormatForField(String field) {
             final SchemaField schemaField = core.getLatestSchema().getFieldOrNull(field);
@@ -126,10 +126,10 @@ public class SchemaCodecFactory extends CodecFactory implements SolrCoreAware {
               DenseVectorField vectorType = (DenseVectorField) fieldType;
               String knnVectorFormatName = vectorType.getCodecFormat();
               if (knnVectorFormatName != null) {
-                if (knnVectorFormatName.equals(Lucene91HnswVectorsFormat.class.getSimpleName())) {
+                if (knnVectorFormatName.equals(Lucene92HnswVectorsFormat.class.getSimpleName())) {
                   int maxConn = vectorType.getHnswMaxConn();
                   int beamWidth = vectorType.getHnswBeamWidth();
-                  return new Lucene91HnswVectorsFormat(maxConn, beamWidth);
+                  return new Lucene92HnswVectorsFormat(maxConn, beamWidth);
                 } else if (knnVectorFormatName.equals(
                     Lucene90HnswVectorsFormat.class.getSimpleName())) {
                   int maxConn = vectorType.getHnswMaxConn();
